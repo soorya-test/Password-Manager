@@ -720,8 +720,8 @@ class GUI:
         )
 
         sub_window.resizable(0, 1)
-        sub_window.minsize(1550, 200)
-        sub_window.maxsize(1550, 793)
+        sub_window.minsize(1300, 200)
+        sub_window.maxsize(1300, 793)
 
         upper_frame = Frame(sub_window, width=1300, bg='#333333')
         middle_frame = Frame(sub_window, width=1300, bg='#333333')
