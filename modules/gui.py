@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 from enum import Enum
 import os
 import sys
+import pyperclip # type: ignore
 
 
 class Action(Enum):
@@ -709,7 +710,7 @@ class GUI:
     @classmethod
     def subWindow(cls, root: Frame, account_list: list[list[str]]) -> None:
 
-        heading_list = ['Platform', 'URL', 'Email', 'Username', 'Password']
+        heading_list = ['Platform', 'URL', 'Email', 'Username', 'Password (Click to Copy)']
 
         sub_window = Toplevel(
             root,
@@ -719,8 +720,8 @@ class GUI:
         )
 
         sub_window.resizable(0, 1)
-        sub_window.minsize(1300, 200)
-        sub_window.maxsize(1300, 793)
+        sub_window.minsize(1550, 200)
+        sub_window.maxsize(1550, 793)
 
         upper_frame = Frame(sub_window, width=1300, bg='#333333')
         middle_frame = Frame(sub_window, width=1300, bg='#333333')
@@ -766,25 +767,47 @@ class GUI:
             else:
                 padding_bottom = 0
 
-            for cell_data in record:
+            for idx, cell_data in enumerate(record):
 
-                Label(
-                    middle_frame,
-                    text=cell_data,
-                    font=('JetBrains Mono Medium', 12),
-                    bg='#333333',
-                    fg='white',
-                    borderwidth=1,
-                    relief=SOLID,
-                    width=25
-                ).grid(
-                    row=i,
-                    column=j,
-                    ipady=7,
-                    pady=(0, padding_bottom)
-                )
+                if idx not in {3, 4}:
+                    Label(
+                        middle_frame,
+                        text=cell_data,
+                        font=('JetBrains Mono Medium', 12),
+                        bg='#333333',
+                        fg='white',
+                        borderwidth=1,
+                        relief=SOLID,
+                        width=25
+                    ).grid(
+                        row=i,
+                        column=j,
+                        ipady=7,
+                        pady=(0, padding_bottom)
+                    )
+                
+                else:
+                    Button(
+                        middle_frame, 
+                        text=cell_data,
+                        font=('JetBrains Mono Medium', 12),
+                        bg='#333333',
+                        fg='white',
+                        borderwidth=1,
+                        relief=SOLID,
+                        width=25,
+                        command=lambda: pyperclip.copy(record[idx])
+                    ).grid(
+                        row=i,
+                        column=j,
+                        ipady=2,
+                        pady=(0, padding_bottom)
+                    )
 
                 j += 1
+
+            
+
 
             i += 1
 
