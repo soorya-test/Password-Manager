@@ -101,6 +101,9 @@ def loginAndRegister() -> None:
 
     lgnRegWindow.mainloop()
 
+    if exit_code == 1:
+        formAndList()
+
 
 def formAndList() -> None:
 
@@ -127,6 +130,9 @@ def formAndList() -> None:
     footer_frame.pack()
 
     frmLstWindow.mainloop()
+
+    if exit_code == -1:
+        loginAndRegister()
 
 
 def addAccount(platform: str, url: str, email: str, user_name: str, password: str):
@@ -172,8 +178,8 @@ def getAccountTable():
 
     return data
 
+def logout():
+    global exit_code
+    exit_code = -1
 
 loginAndRegister()
-
-if (exit_code == 1):
-    formAndList()
