@@ -3,14 +3,6 @@ from PIL import Image, ImageTk
 from enum import Enum
 import os
 import sys
-# import pyperclip # type: ignore
-
-
-class Action(Enum):
-    LogIn = 1
-    Register = 2
-    Account = 3
-
 
 class GUI:
 
@@ -123,7 +115,7 @@ class GUI:
         ).grid(
             row=0,
             column=0,
-            columnspan=2,
+            columnspan=3,
             pady=(15, 0)
         )
         Label(
@@ -152,6 +144,9 @@ class GUI:
             pady=(25, 10),
             sticky=W
         )
+
+        ToolTip(e_master_user_name, "Username can contain only Uppercase & Lowercase\nalphabets, Numbers, Period and Underscore", isError=True)
+
         Label(
             f,
             text="Password: ",
@@ -177,6 +172,8 @@ class GUI:
             column=1,
             sticky=W
         )
+
+        ToolTip(e_master_password, "Password length must be between 8 & 35 and\n must contain Uppercase & Lowercase alphabets,\nnumbers and Special Characters", isError=True)
 
         visibilityToggler = Label(
             f,
@@ -215,7 +212,7 @@ class GUI:
         ).grid(
             row=4,
             column=0,
-            columnspan=2,
+            columnspan=3,
             pady=(20, 0)
         )
 
@@ -228,7 +225,7 @@ class GUI:
         ).grid(
             row=5,
             column=0,
-            columnspan=2,
+            columnspan=3,
             pady=(12, 0)
         )
 
@@ -241,7 +238,7 @@ class GUI:
             cursor='hand2'
         )
         l.bind("<Button-1>", lgnToRegShifter)
-        l.grid(row=6, column=0, columnspan=2)
+        l.grid(row=6, column=0, columnspan=3)
 
         f.pack()
 
@@ -250,13 +247,6 @@ class GUI:
     # * No Return Value
     @classmethod
     def successfullMessage(cls, root: Frame, actionValue) -> None:
-
-        if actionValue == Action.LogIn:
-            message = 'Login Successfull'
-        elif actionValue == Action.Register:
-            message = 'Registration Successfull'
-        elif actionValue == Action.Account:
-            message = 'Account Information has been Added'
 
         f = Frame(root, width=500, height=55, bg='#333333')
 
@@ -272,7 +262,7 @@ class GUI:
 
         Label(
             f,
-            text=message,
+            text=actionValue['positive'],
             fg="#59d400",
             bg="#333333",
             font=('Kamerik 105 W00 Bold', 12),
@@ -290,13 +280,6 @@ class GUI:
     @classmethod
     def unsuccessfullMessage(cls, root: Frame, actionValue) -> None:
 
-        if actionValue == Action.LogIn:
-            message = 'Login Unsuccessfull'
-        elif actionValue == Action.Register:
-            message = 'Registration Unsuccessfull'
-        elif actionValue == Action.Account:
-            message = 'Account Information cannot be Added'
-
         f = Frame(root, width=500, height=55, bg='#333333')
 
         Label(
@@ -310,7 +293,7 @@ class GUI:
         )
         Label(
             f,
-            text=message,
+            text=actionValue['negative'],
             fg="#de151f",
             bg="#333333",
             font=('Kamerik 105 W00 Bold', 12),
@@ -349,7 +332,7 @@ class GUI:
         ).grid(
             row=0,
             column=0,
-            columnspan=2,
+            columnspan=3,
             pady=(15, 0)
         )
 
@@ -409,6 +392,8 @@ class GUI:
             sticky=W
         )
 
+        ToolTip(e_master_user_name, "Username can contain only Uppercase & Lowercase\nalphabets, Numbers, Period and Underscore", isError=True)
+
         Label(
             f,
             text="Password: ",
@@ -434,6 +419,8 @@ class GUI:
             column=1,
             sticky=W
         )
+
+        ToolTip(e_master_password, "Password length must be between 8 & 35 and\n must contain Uppercase & Lowercase alphabets,\nnumbers and Special Characters", isError=True)
 
         visibilityToggler = Label(
             f,
@@ -474,7 +461,7 @@ class GUI:
         ).grid(
             row=4,
             column=0,
-            columnspan=2,
+            columnspan=3,
             pady=(20, 0)
         )
 
@@ -487,7 +474,7 @@ class GUI:
         ).grid(
             row=5,
             column=0,
-            columnspan=2,
+            columnspan=3,
             pady=(12, 0)
         )
 
@@ -500,7 +487,7 @@ class GUI:
             cursor='hand2'
         )
         l.bind("<Button-1>", regToLgnShifter)
-        l.grid(row=6, column=0, columnspan=2)
+        l.grid(row=6, column=0, columnspan=3)
 
         f.pack()
 
@@ -822,9 +809,7 @@ class GUI:
     @classmethod
     def subWindow(cls, root: Frame, account_list: list[list[str]]) -> None:
 
-        heading_list = ['Platform', 'URL', 'Email', 'Username', 'Password (Click to Copy)']
-
-        copy_list = []
+        heading_list = ['Platform', 'URL', 'Email', 'Username', 'Password']
 
         sub_window = Toplevel(
             root,
@@ -871,17 +856,15 @@ class GUI:
                 ipady=7
             )
 
-        i = 1
 
-        for record in account_list:
+        for i, record in enumerate(account_list):
 
-            j = 0
-            if i == len(account_list):
+            if i == len(account_list)-1:
                 padding_bottom = 20
             else:
                 padding_bottom = 0
 
-            for idx, cell_data in enumerate(record):
+            for j, cell_data in enumerate(record):
 
                 l = Label(
                     middle_frame,
@@ -895,24 +878,44 @@ class GUI:
                 )
                     
                 l.grid(
-                    row=i,
+                    row=i+1,
                     column=j,
                     ipady=7,
                     pady=(0, padding_bottom)
                 )
 
-                if idx in {3, 4}:
+                if j in {3, 4}:
                     l.config(cursor='hand2')
+                    ToolTip(l, "Click to Copy to Clipboard", x=150, y=25)
                     l.bind("<Button-1>", lambda e: [e.widget.clipboard_clear(), e.widget.clipboard_append(e.widget.cget("text"))])
-                   
-                   
-
-
-                j += 1
-
-            
-
-
-            i += 1
 
         middle_frame.pack()
+
+
+class ToolTip:
+    def __init__(self, widget, text, isError = False, x=0, y=0):
+        self.widget = widget
+        self.text = text
+        self.isError = isError
+        self.x = x or 10
+        self.y = y or 27
+        self.tooltip_window = None
+        self.widget.bind("<Enter>", self.show_tooltip)
+        self.widget.bind("<Leave>", self.hide_tooltip)
+
+    def show_tooltip(self, _):
+        if self.tooltip_window is not None:
+            return
+        x, y, _, _ = self.widget.bbox("insert")
+        x += self.widget.winfo_rootx() + self.x
+        y += self.widget.winfo_rooty() + self.y
+        self.tooltip_window = tw = Toplevel(self.widget)
+        tw.wm_overrideredirect(True)
+        tw.wm_geometry(f"+{x}+{y}")
+        label = Label(tw, text=self.text, background="#454545", fg="gold" if self.isError else "#75E6DA", relief="solid", borderwidth=1)
+        label.pack()
+
+    def hide_tooltip(self, _):
+        if self.tooltip_window:
+            self.tooltip_window.destroy()
+            self.tooltip_window = None
