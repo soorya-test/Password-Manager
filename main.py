@@ -101,6 +101,9 @@ def loginAndRegister() -> None:
 
     lgnRegWindow.mainloop()
 
+    if exit_code == 1:
+        formAndList()
+
 
 def formAndList() -> None:
 
@@ -119,7 +122,7 @@ def formAndList() -> None:
     global footer_frame
     footer_frame = Frame(frmLstWindow, bg='#333333')
 
-    GUI.welcomeMsg(header_frame, userData[1], getAccountTable)
+    GUI.welcomeMsg(header_frame, userData[1], getAccountTable, logout)
     GUI.accountForm(main_frame, addAccount, getGeneratedPassword)
 
     header_frame.pack()
@@ -127,6 +130,9 @@ def formAndList() -> None:
     footer_frame.pack()
 
     frmLstWindow.mainloop()
+
+    if exit_code == -1:
+        loginAndRegister()
 
 
 def addAccount(platform: str, url: str, email: str, user_name: str, password: str):
@@ -172,8 +178,9 @@ def getAccountTable():
 
     return data
 
+def logout():
+    global exit_code
+    exit_code = -1
+    frmLstWindow.destroy()
 
 loginAndRegister()
-
-if (exit_code == 1):
-    formAndList()

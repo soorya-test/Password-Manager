@@ -3,7 +3,7 @@ from PIL import Image, ImageTk
 from enum import Enum
 import os
 import sys
-import pyperclip # type: ignore
+# import pyperclip # type: ignore
 
 
 class Action(Enum):
@@ -38,7 +38,7 @@ class GUI:
 
     @classmethod
     def clearImg(cls):
-        cls.__images.clear()
+        cls.__images = {}
 
     # * Function to Fetch Images for Account Form and Account List
     # * No Parameters
@@ -47,18 +47,29 @@ class GUI:
     def frmLstInit(cls):
         import_tick_image = Image.open(GUI.imagePath()+r"\tick_image.png")
         import_cross_image = Image.open(GUI.imagePath()+r"\cross_image.png")
-        import_generate_password_image = Image.open(
-            GUI.imagePath()+r"\generate_password.png")
+        import_logout_image = Image.open(GUI.imagePath()+r"\logout.png")
+        import_eyes_closed_image = Image.open(GUI.imagePath()+r"\eyes-closed.png")
+        import_eyes_open_image = Image.open(GUI.imagePath()+r"\eyes-open.png")
+
+
         resized_tick_image = import_tick_image.resize(
             (40, 40), Image.LANCZOS)
         resized_cross_image = import_cross_image.resize(
             (25, 25), Image.LANCZOS)
-        resized_generate_password_image = import_generate_password_image.resize(
-            (40, 40), Image.LANCZOS)
-        cls.__images.append(ImageTk.PhotoImage(resized_tick_image))
-        cls.__images.append(ImageTk.PhotoImage(resized_cross_image))
-        cls.__images.append(ImageTk.PhotoImage(
-            resized_generate_password_image))
+        resized_logout_image = import_logout_image.resize(
+            (20, 20), Image.LANCZOS)
+        resized_eyes_closed_image = import_eyes_closed_image.resize(
+            (15, 15), Image.LANCZOS)
+        resized_eyes_open_image = import_eyes_open_image.resize(
+            (15, 15), Image.LANCZOS)
+        
+        cls.__images = {
+            "tick": ImageTk.PhotoImage(resized_tick_image),
+            "cross": ImageTk.PhotoImage(resized_cross_image),
+            "logout": ImageTk.PhotoImage(resized_logout_image),
+            "eyes-closed": ImageTk.PhotoImage(resized_eyes_closed_image),
+            "eyes-open": ImageTk.PhotoImage(resized_eyes_open_image)
+        }    
 
     # * Function to Fetch Images for Login and Register
     # * No Parameters
@@ -67,12 +78,24 @@ class GUI:
     def lgnRegInit(cls):
         import_tick_image = Image.open(GUI.imagePath()+r"\tick_image.png")
         import_cross_image = Image.open(GUI.imagePath()+r"\cross_image.png")
+        import_eyes_closed_image = Image.open(GUI.imagePath()+r"\eyes-closed.png")
+        import_eyes_open_image = Image.open(GUI.imagePath()+r"\eyes-open.png")
+        
         resized_tick_image = import_tick_image.resize(
             (40, 40), Image.LANCZOS)
         resized_cross_image = import_cross_image.resize(
             (25, 25), Image.LANCZOS)
-        cls.__images.append(ImageTk.PhotoImage(resized_tick_image))
-        cls.__images.append(ImageTk.PhotoImage(resized_cross_image))
+        resized_eyes_closed_image = import_eyes_closed_image.resize(
+            (15, 15), Image.LANCZOS)
+        resized_eyes_open_image = import_eyes_open_image.resize(
+            (15, 15), Image.LANCZOS)
+
+        cls.__images = {
+            "tick": ImageTk.PhotoImage(resized_tick_image),
+            "cross": ImageTk.PhotoImage(resized_cross_image),
+            "eyes-closed": ImageTk.PhotoImage(resized_eyes_closed_image),
+            "eyes-open": ImageTk.PhotoImage(resized_eyes_open_image)
+        } 
 
     # * Login Page Screen
     # * Parameters: root, SignIn Function and Login to Register Function
@@ -82,7 +105,14 @@ class GUI:
 
         master_user_name = StringVar()
         master_password = StringVar()
+        isPasswordVisibile = False
         f = Frame(root, width=500, height=195, bg='#333333')
+
+        def togglePasswordVisibility():
+            nonlocal isPasswordVisibile
+            isPasswordVisibile = not isPasswordVisibile
+            e_master_password.config(show="" if isPasswordVisibile else "*")
+            visibilityToggler.config(image=cls.__images["eyes-open" if isPasswordVisibile else "eyes-closed"])
 
         Label(
             f,
@@ -136,6 +166,7 @@ class GUI:
         e_master_password = Entry(
             f,
             textvariable=master_password,
+            show="*",
             font=('JetBrains Mono Medium', 12),
             bg='#595959',
             fg='white',
@@ -146,6 +177,23 @@ class GUI:
             column=1,
             sticky=W
         )
+
+        visibilityToggler = Label(
+            f,
+            image=cls.__images["eyes-closed"],
+            bg='#333333',
+        )
+        
+        visibilityToggler.grid(
+            row=2,
+            column=2,
+            pady=(2, 0),
+            padx=(5, 0),
+            sticky=W
+        )
+
+        visibilityToggler.bind("<Button-1>", lambda _: togglePasswordVisibility())
+
         Button(
             f,
             width=7,
@@ -214,7 +262,7 @@ class GUI:
 
         Label(
             f,
-            image=cls.__images[0],
+            image=cls.__images["tick"],
             bg='#333333'
         ).grid(
             row=0,
@@ -253,7 +301,7 @@ class GUI:
 
         Label(
             f,
-            image=cls.__images[1],
+            image=cls.__images["cross"],
             bg='#333333'
         ).grid(
             row=0,
@@ -282,8 +330,15 @@ class GUI:
         first_name = StringVar()
         master_user_name = StringVar()
         master_password = StringVar()
+        isPasswordVisibile = False
 
         f = Frame(root, width=500, height=305, bg='#333333')
+
+        def togglePasswordVisibility():
+            nonlocal isPasswordVisibile
+            isPasswordVisibile = not isPasswordVisibile
+            e_master_password.config(show="" if isPasswordVisibile else "*")
+            visibilityToggler.config(image=cls.__images["eyes-open" if isPasswordVisibile else "eyes-open"])
 
         Label(
             f,
@@ -380,6 +435,22 @@ class GUI:
             sticky=W
         )
 
+        visibilityToggler = Label(
+            f,
+            image=cls.__images["eyes-closed"],
+            bg='#333333',
+        )
+        
+        visibilityToggler.grid(
+            row=3,
+            column=2,
+            pady=(2, 0),
+            padx=(5, 0),
+            sticky=W
+        )
+
+        visibilityToggler.bind("<Button-1>", lambda _: togglePasswordVisibility())
+
         Button(
             f,
             width=7,
@@ -437,10 +508,9 @@ class GUI:
     # * Parameters: root, First Name -> String
     # * No Return Value
     @classmethod
-    def welcomeMsg(cls, root: Frame, firstName: str, getAccountTable) -> None:
+    def welcomeMsg(cls, root: Frame, firstName: str, getAccountTable, logout) -> None:
 
         f = Frame(root, width=650, height=55, bg='#333333')
-        platform_list = []
 
         Label(
             f,
@@ -471,6 +541,25 @@ class GUI:
 
         l = Label(
             f,
+            image=cls.__images["logout"],
+            bg='#333333',
+            cursor='hand2'
+        )
+        
+        l.grid(
+            row=0,
+            column=2,
+            pady=(2, 0),
+            padx=(2, 0),
+            sticky=W
+        )
+
+        l.bind("<Button-1>", lambda _: logout())
+        
+        
+
+        l = Label(
+            f,
             text='View Account List',
             font=('JetBrains Mono Medium', 12),
             bg='#333333',
@@ -478,7 +567,7 @@ class GUI:
             cursor='hand2'
         )
         l.grid(row=0, column=2, pady=(2, 0), padx=(325, 0), sticky=E)
-        l.bind("<Button-1>", lambda e: GUI.subWindow(f, getAccountTable()))
+        l.bind("<Button-1>", lambda _: GUI.subWindow(f, getAccountTable()))
 
         f.pack(anchor='w', fill='x')
 
@@ -496,6 +585,13 @@ class GUI:
         password = StringVar()
         password_length = StringVar()
         password_length.set('Password Length')
+        isPasswordVisibile = False
+
+        def togglePasswordVisibility():
+            nonlocal isPasswordVisibile
+            isPasswordVisibile = not isPasswordVisibile
+            e_password.config(show="" if isPasswordVisibile else "*")
+            visibilityToggler.config(image=cls.__images["eyes-open" if isPasswordVisibile else "eyes-closed"])
 
         f = Frame(root, width=650, height=305, bg='#333333')
 
@@ -622,9 +718,26 @@ class GUI:
             font=('JetBrains Mono Medium', 12),
             bg='#595959',
             fg='white',
+            show="*",
             relief=SOLID,
         )
         e_password.grid(row=5, column=1, sticky=W)
+
+        visibilityToggler = Label(
+            f,
+            image=cls.__images["eyes-closed"],
+            bg='#333333',
+        )
+        
+        visibilityToggler.grid(
+            row=5,
+            column=2,
+            pady=(2, 0),
+            padx=(5, 0),
+            sticky=W
+        )
+
+        visibilityToggler.bind("<Button-1>", lambda _: togglePasswordVisibility())
 
         drop_down = OptionMenu(
             f,
@@ -660,7 +773,6 @@ class GUI:
         l = Label(
             f,
             text=' Click to Generate',
-            image=cls.__images[2],
             compound=LEFT,
             font=('JetBrains Mono Medium', 10),
             bg='#333333',
@@ -668,7 +780,7 @@ class GUI:
             cursor='hand2'
         )
         l.bind("<Button-1>",
-               lambda e: [
+               lambda _: [
                    e_password.delete(0, END), e_password.insert(
                        0, getGeneratedPassword(
                            int(password_length.get()) if password_length.get() != 'Password Length' else 15))
@@ -711,6 +823,8 @@ class GUI:
     def subWindow(cls, root: Frame, account_list: list[list[str]]) -> None:
 
         heading_list = ['Platform', 'URL', 'Email', 'Username', 'Password (Click to Copy)']
+
+        copy_list = []
 
         sub_window = Toplevel(
             root,
@@ -769,40 +883,30 @@ class GUI:
 
             for idx, cell_data in enumerate(record):
 
-                if idx not in {3, 4}:
-                    Label(
-                        middle_frame,
-                        text=cell_data,
-                        font=('JetBrains Mono Medium', 12),
-                        bg='#333333',
-                        fg='white',
-                        borderwidth=1,
-                        relief=SOLID,
-                        width=25
-                    ).grid(
-                        row=i,
-                        column=j,
-                        ipady=7,
-                        pady=(0, padding_bottom)
-                    )
-                
-                else:
-                    Button(
-                        middle_frame, 
-                        text=cell_data,
-                        font=('JetBrains Mono Medium', 12),
-                        bg='#333333',
-                        fg='white',
-                        borderwidth=1,
-                        relief=SOLID,
-                        width=25,
-                        command=lambda: pyperclip.copy(record[idx])
-                    ).grid(
-                        row=i,
-                        column=j,
-                        ipady=2,
-                        pady=(0, padding_bottom)
-                    )
+                l = Label(
+                    middle_frame,
+                    text=cell_data,
+                    font=('JetBrains Mono Medium', 12),
+                    bg='#333333',
+                    fg='white',
+                    borderwidth=1,
+                    relief=SOLID,
+                    width=25
+                )
+                    
+                l.grid(
+                    row=i,
+                    column=j,
+                    ipady=7,
+                    pady=(0, padding_bottom)
+                )
+
+                if idx in {3, 4}:
+                    l.config(cursor='hand2')
+                    l.bind("<Button-1>", lambda e: [e.widget.clipboard_clear(), e.widget.clipboard_append(e.widget.cget("text"))])
+                   
+                   
+
 
                 j += 1
 
