@@ -23,6 +23,15 @@ actions = {
     },
     "not_found": {
       "negative": 'User not Found'
+    },
+    "empty_fields_account": {
+      "negative": 'Platform and Password field cannot be Empty.'
+    },
+    "empty_fields_reg": {
+      "negative": 'Name, Username and Password field cannot be Empty.'
+    },
+    "empty_fields_login": {
+      "negative": 'Username and Password field cannot be Empty.'
     }
 }
 

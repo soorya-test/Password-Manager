@@ -24,6 +24,14 @@ def regToLgn(_) -> None:
 
 def signUpFunction(first_name: str, master_user_name: str, master_password: str) -> None:
 
+    if not first_name or not master_user_name or not master_password:
+        if len(footer_frame.winfo_children()):
+            footer_frame.winfo_children()[0].destroy()
+        GUI.unsuccessfullMessage(footer_frame, actions['empty_fields_reg'])
+        footer_frame.after(
+            2000, lambda: footer_frame.winfo_children()[0].destroy())
+        return
+
 
     if Regex.verifyMasterUserName(master_user_name) and Regex.verifyPassword(master_password):
         hashed_password = Hashing.creatingHash(master_password)
@@ -45,14 +53,26 @@ def signUpFunction(first_name: str, master_user_name: str, master_password: str)
             if len(footer_frame.winfo_children()):
                 footer_frame.winfo_children()[0].destroy()
             GUI.unsuccessfullMessage(footer_frame, actions['register'])
+            footer_frame.after(
+                2000, lambda: footer_frame.winfo_children()[0].destroy())
 
     else:
         if len(footer_frame.winfo_children()):
             footer_frame.winfo_children()[0].destroy()
         GUI.unsuccessfullMessage(footer_frame, actions['credentials'])
+        footer_frame.after(
+                2000, lambda: footer_frame.winfo_children()[0].destroy())
 
 
 def signInFunction(master_user_name: str, master_password: str) -> None:
+
+    if not master_user_name or not master_password:
+        if len(footer_frame.winfo_children()):
+            footer_frame.winfo_children()[0].destroy()
+        GUI.unsuccessfullMessage(footer_frame, actions['empty_fields_login'])
+        footer_frame.after(
+            2000, lambda: footer_frame.winfo_children()[0].destroy())
+        return
 
     try:
         stored_password_hash = Database.getUserHashedPassword(master_user_name)
@@ -71,17 +91,23 @@ def signInFunction(master_user_name: str, master_password: str) -> None:
             if len(footer_frame.winfo_children()):
                 footer_frame.winfo_children()[0].destroy()
             GUI.unsuccessfullMessage(footer_frame, actions['credentials'])
+            footer_frame.after(
+                2000, lambda: footer_frame.winfo_children()[0].destroy())
 
 
     except UserNotFoundError:
         if len(footer_frame.winfo_children()):
             footer_frame.winfo_children()[0].destroy()
         GUI.unsuccessfullMessage(footer_frame, actions['not_found'])
+        footer_frame.after(
+                2000, lambda: footer_frame.winfo_children()[0].destroy())
 
     except:
         if len(footer_frame.winfo_children()):
             footer_frame.winfo_children()[0].destroy()
         GUI.unsuccessfullMessage(footer_frame, actions['login'])
+        footer_frame.after(
+                2000, lambda: footer_frame.winfo_children()[0].destroy())
 
 
 def loginAndRegister() -> None:
@@ -140,6 +166,14 @@ def formAndList() -> None:
 
 
 def addAccount(platform: str, url: str, email: str, user_name: str, password: str):
+
+    if not platform or not password:
+        if len(footer_frame.winfo_children()):
+            footer_frame.winfo_children()[0].destroy()
+        GUI.unsuccessfullMessage(footer_frame, actions['empty_fields_account'])
+        footer_frame.after(
+            2000, lambda: footer_frame.winfo_children()[0].destroy())
+        return
 
     try:
         unique_key = Database.getUserUniqueKey(userData[0]).encode()
