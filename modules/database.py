@@ -1,6 +1,8 @@
 import os
 import sqlite3
 
+from .exceptions import UserNotFoundError
+
 
 class Database:
 
@@ -87,7 +89,10 @@ class Database:
         with open(r'./SQL/read-HP-userTable.sql', 'r') as f:
             query = f.read()
             c.execute(query, params).fetchall()
-            data = list(c.execute(query, params).fetchall()[0])
+            try:
+                data = list(c.execute(query, params).fetchall()[0])
+            except IndexError:
+                raise UserNotFoundError
         conn.commit()
         conn.close()
         return data.pop()

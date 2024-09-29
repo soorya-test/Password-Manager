@@ -1,6 +1,6 @@
 from tkinter import *
 
-from modules import Database, GUI, Hashing, Cryptography, Regex, Action
+from modules import Database, GUI, Hashing, Cryptography, Regex, actions, UserNotFoundError
 
 userData = []
 exit_code = -1
@@ -36,7 +36,7 @@ def signUpFunction(first_name: str, master_user_name: str, master_password: str)
                 first_name, master_user_name, hashed_password, unique_key)
             if len(footer_frame.winfo_children()):
                 footer_frame.winfo_children()[0].destroy()
-            GUI.successfullMessage(footer_frame, Action.Register)
+            GUI.successfullMessage(footer_frame, actions['register'])
             footer_frame.after(
                 2000, lambda: footer_frame.winfo_children()[0].destroy())
             footer_frame.after(1000, lambda: regToLgn(None))
@@ -44,13 +44,12 @@ def signUpFunction(first_name: str, master_user_name: str, master_password: str)
         except:
             if len(footer_frame.winfo_children()):
                 footer_frame.winfo_children()[0].destroy()
-            GUI.unsuccessfullMessage(footer_frame, Action.Register)
+            GUI.unsuccessfullMessage(footer_frame, actions['register'])
 
     else:
-        print("Not a valid Username or Password")
         if len(footer_frame.winfo_children()):
             footer_frame.winfo_children()[0].destroy()
-        GUI.unsuccessfullMessage(footer_frame, Action.Register)
+        GUI.unsuccessfullMessage(footer_frame, actions['credentials'])
 
 
 def signInFunction(master_user_name: str, master_password: str) -> None:
@@ -63,7 +62,7 @@ def signInFunction(master_user_name: str, master_password: str) -> None:
             first_name = Database.getUserFirstName(master_user_name)
             userData.append(master_user_name)
             userData.append(first_name)
-            GUI.successfullMessage(footer_frame, Action.LogIn)
+            GUI.successfullMessage(footer_frame, actions['login'])
             footer_frame.after(1000, lambda: GUI.clearImg())
             footer_frame.after(1000, lambda: lgnRegWindow.destroy())
             global exit_code
@@ -71,13 +70,18 @@ def signInFunction(master_user_name: str, master_password: str) -> None:
         else:
             if len(footer_frame.winfo_children()):
                 footer_frame.winfo_children()[0].destroy()
-            GUI.unsuccessfullMessage(footer_frame, Action.LogIn)
+            GUI.unsuccessfullMessage(footer_frame, actions['credentials'])
 
+
+    except UserNotFoundError:
+        if len(footer_frame.winfo_children()):
+            footer_frame.winfo_children()[0].destroy()
+        GUI.unsuccessfullMessage(footer_frame, actions['not_found'])
 
     except:
         if len(footer_frame.winfo_children()):
             footer_frame.winfo_children()[0].destroy()
-        GUI.unsuccessfullMessage(footer_frame, Action.LogIn)
+        GUI.unsuccessfullMessage(footer_frame, actions['login'])
 
 
 def loginAndRegister() -> None:
@@ -146,13 +150,13 @@ def addAccount(platform: str, url: str, email: str, user_name: str, password: st
             userData[0], platform, url, email, user_name, encrypted_password)
         if len(footer_frame.winfo_children()):
             footer_frame.winfo_children()[0].destroy()
-        GUI.successfullMessage(footer_frame, Action.Account)
+        GUI.successfullMessage(footer_frame, actions['account'])
         footer_frame.after(
             2000, lambda: footer_frame.winfo_children()[0].destroy())
     except:
         if len(footer_frame.winfo_children()):
             footer_frame.winfo_children()[0].destroy()
-        GUI.unsuccessfullMessage(footer_frame, Action.Account)
+        GUI.unsuccessfullMessage(footer_frame, actions['account'])
         footer_frame.after(
             2000, lambda: footer_frame.winfo_children()[0].destroy())
 
