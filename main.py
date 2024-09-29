@@ -122,7 +122,7 @@ def formAndList() -> None:
     global footer_frame
     footer_frame = Frame(frmLstWindow, bg='#333333')
 
-    GUI.welcomeMsg(header_frame, userData[1], getAccountTable)
+    GUI.welcomeMsg(header_frame, userData[1], getAccountTable, logout)
     GUI.accountForm(main_frame, addAccount, getGeneratedPassword)
 
     header_frame.pack()
@@ -181,5 +181,6 @@ def getAccountTable():
 def logout():
     global exit_code
     exit_code = -1
+    frmLstWindow.destroy()
 
 loginAndRegister()
