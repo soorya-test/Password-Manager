@@ -225,7 +225,9 @@ def getAccountTable():
 
 def logout():
     global exit_code
+    global userData
     exit_code = -1
+    userData = []
     frmLstWindow.destroy()
 
 loginAndRegister()
