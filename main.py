@@ -32,36 +32,43 @@ def signUpFunction(first_name: str, master_user_name: str, master_password: str)
             2000, lambda: footer_frame.winfo_children()[0].destroy())
         return
 
-
-    if Regex.verifyMasterUserName(master_user_name) and Regex.verifyPassword(master_password):
-        hashed_password = Hashing.creatingHash(master_password)
-        Cryptography.generateKey()
-        unique_key = Cryptography.getKey().decode()
-        Cryptography.destroyKey()
-
-        try:
-            Database.userInsertion(
-                first_name, master_user_name, hashed_password, unique_key)
-            if len(footer_frame.winfo_children()):
-                footer_frame.winfo_children()[0].destroy()
-            GUI.successfullMessage(footer_frame, actions['register'])
-            footer_frame.after(
-                2000, lambda: footer_frame.winfo_children()[0].destroy())
-            footer_frame.after(1000, lambda: regToLgn(None))
-
-        except:
-            if len(footer_frame.winfo_children()):
-                footer_frame.winfo_children()[0].destroy()
-            GUI.unsuccessfullMessage(footer_frame, actions['register'])
-            footer_frame.after(
-                2000, lambda: footer_frame.winfo_children()[0].destroy())
-
-    else:
+    if not Regex.verifyMasterUserName(master_user_name):
         if len(footer_frame.winfo_children()):
             footer_frame.winfo_children()[0].destroy()
-        GUI.unsuccessfullMessage(footer_frame, actions['credentials'])
+        GUI.unsuccessfullMessage(footer_frame, actions['credentials']['username'])
         footer_frame.after(
                 2000, lambda: footer_frame.winfo_children()[0].destroy())
+        return
+        
+    if not Regex.verifyPassword(master_password):
+        if len(footer_frame.winfo_children()):
+            footer_frame.winfo_children()[0].destroy()
+        GUI.unsuccessfullMessage(footer_frame, actions['credentials']['password'])
+        footer_frame.after(
+                2000, lambda: footer_frame.winfo_children()[0].destroy())
+        return
+        
+    hashed_password = Hashing.creatingHash(master_password)
+    Cryptography.generateKey()
+    unique_key = Cryptography.getKey().decode()
+    Cryptography.destroyKey()
+
+    try:
+        Database.userInsertion(
+            first_name, master_user_name, hashed_password, unique_key)
+        if len(footer_frame.winfo_children()):
+            footer_frame.winfo_children()[0].destroy()
+        GUI.successfullMessage(footer_frame, actions['register'])
+        footer_frame.after(
+            2000, lambda: footer_frame.winfo_children()[0].destroy())
+        footer_frame.after(1000, lambda: regToLgn(None))
+
+    except:
+        if len(footer_frame.winfo_children()):
+            footer_frame.winfo_children()[0].destroy()
+        GUI.unsuccessfullMessage(footer_frame, actions['register'])
+        footer_frame.after(
+            2000, lambda: footer_frame.winfo_children()[0].destroy())
 
 
 def signInFunction(master_user_name: str, master_password: str) -> None:

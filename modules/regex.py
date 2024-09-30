@@ -15,6 +15,25 @@ class Regex:
     # * Return Value: Boolean
     @classmethod
     def verifyPassword(cls, master_password: str) -> bool:
-        spec_char = r'''!@$%^&*()_+-={}[]|\:;"'?/><,.~`#'''
-        pattern = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*["+spec_char+"])[A-Za-z\d"+spec_char+"]{8,35}$"
-        return bool(re.match(pattern, master_password))
+        s = master_password
+        if  len(s) < 8 or len(s) > 35:
+            print(1)
+            return False
+        if not re.search(r'[a-z]', s):
+            print(2)
+            return False
+
+        if not re.search(r'[A-Z]', s):
+            print(3)
+            return False
+
+        if not re.search(r'\d', s):
+            print(4)
+            return False
+
+        if not re.search(r'[@$!%*?&#]', s):
+            print(5)
+            return False
+
+        return True
+

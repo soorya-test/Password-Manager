@@ -1,4 +1,4 @@
-CREATE TABLE {} (
+CREATE TABLE IF NOT EXISTS {} (
     platform VARCHAR(255) NOT NULL,
     url VARCHAR(255),
     email VARCHAR(255),

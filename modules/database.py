@@ -22,16 +22,14 @@ class Database:
     # * No Return Value
     @classmethod
     def init(cls) -> None:
-        if not os.path.exists(cls.app_data+r'/zAsh7'):
+        os.makedirs(cls.app_data+r'/zAsh7'+r'/Password Manager'+r'/.database', exist_ok=True)
 
-            os.makedirs(cls.app_data+r'/zAsh7'+r'/Password Manager'+r'/.database')
-
-            conn = Database._sqliteConnection()
-            c = conn.cursor()
-            with open(r'./SQL/create-userTable.sql', 'r') as f:
-                query = f.read()
-                c.execute(query)
-            conn.close()
+        conn = Database._sqliteConnection()
+        c = conn.cursor()
+        with open(r'./SQL/create-userTable.sql', 'r') as f:
+            query = f.read()
+            c.execute(query)
+        conn.close()
 
     # * Function to insert User and create a Account Table
     # * Parameters: First Name, Master Username, Hashed Password, Unique Key
@@ -50,7 +48,6 @@ class Database:
             query = f.read()
             c.execute(query, params)
         conn.commit()
-
         with open(r'./SQL/create-userData.sql', 'r') as f:
             query = f.read().format(master_user_name)
             c.execute(query)

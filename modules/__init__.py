@@ -19,7 +19,12 @@ actions = {
         "negative": 'Account Information cannot be Added'
     },
     "credentials": {
-      "negative": 'Invalid Username or Password'
+      "username": {
+        "negative": 'Invalid Username'
+      },
+      "password": {
+        "negative": 'Invalid Password'
+      }
     },
     "not_found": {
       "negative": 'User not Found'
